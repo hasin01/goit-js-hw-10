@@ -13,25 +13,33 @@ const countryInfo = document.querySelector('.country-info');
 const onCountryFormInput = event => {
   const countryName = searchBox.value.trim();
   if (!countryName) {
-    countryList.innerHTML = '';
-    countryInfo.innerHTML = '';
+    resetMarkup(countryList)
     return;
   }
   fetchCountries(countryName)
     .then(data => {
       if (data.length > 10) {
+        resetMarkup(countryList)
         Notiflix.Notify.info(
           'Too many matches found. Please enter a more specific name.'
         );
       } else if (data.length >= 2 && data.length <= 10) {
         countryListFoo(data);
+        resetMarkup(countryInfo)
+        console.log("countryInfo");
       } else if (data.length === 1) {
         countryInfoFoo(data);
+        resetMarkup(countryList)
       }
     })
     .catch(err => {
+      
+      resetMarkup(countryList)
+      resetMarkup(countryInfo)
       if (err.message === '404') {
         Notiflix.Notify.failure('Oops, there is no country with that name');
+    
+        
       }
     });
 };
@@ -73,3 +81,8 @@ searchBox.addEventListener(
     onCountryFormInput();
   }, DEBOUNCE_DELAY)
 );
+function resetMarkup(el) {
+  el.innerHTML = ' ';
+
+}
+console.log("dddd");
